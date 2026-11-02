@@ -1,0 +1,68 @@
+name: Desktop release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+          - os: macos-latest
+            platform: macos
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Check production dependency advisories
+        run: npm audit --omit=dev --audit-level=high
+      - name: Run automated tests
+        run: npm test
+      - name: Write the public license key
+        shell: pwsh
+        env:
+          LICENSE_PUBLIC_KEY: ${{ secrets.LOOK_IN_GIT_LICENSE_PUBLIC_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:LICENSE_PUBLIC_KEY)) { throw 'Set LOOK_IN_GIT_LICENSE_PUBLIC_KEY in repository Actions secrets.' }
+          New-Item -ItemType Directory -Force artifacts/issuer | Out-Null
+          $env:LICENSE_PUBLIC_KEY | Set-Content -NoNewline -Encoding utf8NoBOM artifacts/issuer/public.pem
+      - run: npm run build
+      - name: Prepare and smoke-test the bundled desktop app
+        run: |
+          npm run desktop:prepare -- --smoke
+          npm run desktop:smoke -- --smoke
+      - if: matrix.platform == 'windows'
+        run: npm run desktop:build:win
+      - if: matrix.platform == 'macos'
+        run: npm run desktop:build:mac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Look-in-Git-${{ matrix.platform }}
+          path: artifacts/desktop/*
+          if-no-files-found: error
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true

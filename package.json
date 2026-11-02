@@ -1,0 +1,64 @@
+{
+  "name": "look-in-git",
+  "version": "2.2.0",
+  "private": true,
+  "description": "A focused local Git workspace for reviewing changes and getting work done.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "start": "node scripts/start.mjs",
+    "dev": "node scripts/start.mjs --dev",
+    "build": "tsc --noEmit && vite build --configLoader runner",
+    "test": "vitest run --configLoader runner",
+    "test:watch": "vitest --configLoader runner",
+    "demo": "node scripts/start.mjs --demo",
+    "package:client": "node scripts/package-client.mjs",
+    "license:init": "node scripts/license.mjs init --out artifacts/issuer",
+    "license:issue": "node scripts/license.mjs issue",
+    "desktop:prepare": "node scripts/prepare-electron.mjs",
+    "desktop:smoke": "node scripts/smoke-electron-backend.mjs",
+    "desktop:dev": "npm run build && node scripts/prepare-electron.mjs --dev && npx --yes electron@45.1.0 .",
+    "desktop:build": "npm run desktop:prepare && npx --yes electron-builder@26.18.0 --publish never",
+    "desktop:build:win": "npm run desktop:prepare && npx --yes electron-builder@26.18.0 --win nsis portable --publish never",
+    "desktop:build:mac": "npm run desktop:prepare && npx --yes electron-builder@26.18.0 --mac dmg --publish never"
+  },
+  "main": "electron/main.cjs",
+  "dependencies": {
+    "express": "^5.1.0",
+    "highlight.js": "^11.11.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/supertest": "^6.0.3",
+    "@vitejs/plugin-react": "^5.0.0",
+    "supertest": "^7.1.0",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0",
+    "vitest": "^3.2.0",
+    "esbuild": "^0.28.2"
+  },
+  "build": {
+    "appId": "com.look-in-git.desktop",
+    "productName": "Look-in-Git",
+    "electronVersion": "45.1.0",
+    "asar": true,
+    "files": ["electron/**/*", "package.json"],
+    "extraResources": [{"from":"artifacts/electron-runtime","to":"backend","filter":["**/*"]}],
+    "directories": {"output":"artifacts/desktop"},
+    "win": {"icon":"artifacts/electron-icons/look-in-git.ico","target":["nsis","portable"],"artifactName":"Look-in-Git-${version}-Windows-${arch}.${ext}"},
+    "nsis": {"oneClick":false,"allowToChangeInstallationDirectory":true,"createDesktopShortcut":true,"createStartMenuShortcut":true},
+    "mac": {"icon":"artifacts/electron-icons/look-in-git.icns","target":["dmg"],"category":"public.app-category.developer-tools","artifactName":"Look-in-Git-${version}-macOS-${arch}.${ext}"},
+    "dmg": {"sign":false}
+  }
+}
