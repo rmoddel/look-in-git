@@ -261,4 +261,5 @@ This is a tested release candidate, not a claim of feature parity with every est
 
 The layout takes cues from [Tower's working-copy workflow](https://www.git-tower.com/help/guides/first-steps/basic-workflow/windows). Colors use Microsoft's [VS Code Dark Modern](https://github.com/microsoft/vscode/blob/main/extensions/theme-defaults/themes/dark_modern.json), [Light Modern](https://github.com/microsoft/vscode/blob/main/extensions/theme-defaults/themes/light_modern.json), and [Dark+ syntax palette](https://github.com/microsoft/vscode/blob/main/extensions/theme-defaults/themes/dark_plus.json) as references. Git behavior follows the official [status](https://git-scm.com/docs/git-status), [apply](https://git-scm.com/docs/git-apply), and [credential](https://git-scm.com/docs/git-credential) documentation.
 #   l o o k - i n - g i t  
+ #   l o o k - i n - g i t  
  
