@@ -9,7 +9,7 @@ The app opens on **Working Changes**. Review staged and unstaged files, inspect 
 Install [Node.js 22.12 or later](https://nodejs.org/) and [Git for Windows](https://git-scm.com/download/win). Make sure both are available on `PATH`.
 
 ```powershell
-git clone https://github.com/rmoddel/look-in-git.git
+git clone https://github.com/OWNER/look-in-git.git
 Set-Location look-in-git
 npm.cmd install
 npm.cmd start
@@ -44,8 +44,13 @@ npm.cmd start
 - Compare commits or branches, merge, rebase, cherry-pick, revert, fetch, pull, push, and sync with an upstream branch.
 - Switch branches safely. Switching to a remote branch can save current work in a stash and offer to restore it afterward.
 - Manage Git worktrees as separate working folders. Create, open, compare, move, lock, repair, and remove worktrees with clear status and confirmation.
+- Review changes from multiple worktrees or AI coding agents side by side. Agent labels are assigned by the user; Git cannot identify which agent owns a worktree.
 - Resolve text conflicts in the embedded three-way merge editor. Binary and some special-file conflicts need an external Git tool.
 - Use snapshots and recovery options for supported reset, amend, checkout, and discard workflows.
+
+### Safer Git actions
+
+Important operations show the source, destination, and expected effect before running. Push does not force; pull uses fast-forward only. Branch deletion requires Git to confirm the branch is merged. Switches can save working changes in a stash and offer to restore them afterward. Recovery options keep a reference to the previous commit where supported. Discarding uncommitted changes can still permanently lose those edits.
 
 Remote operations use your normal Git credential helper, SSH keys, and agent. Look-in-Git does not store your Git password or token in its settings.
 
